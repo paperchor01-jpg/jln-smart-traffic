@@ -39,8 +39,8 @@
         <phase duration="20" state="rr"/>
     </tlLogic>
 
-    <connection from="Segment1" to="Segment2" fromLane="0" toLane="0" tl="TL1" linkIndex="0"/>
-    <connection from="Segment1" to="Segment2" fromLane="1" toLane="1" tl="TL1" linkIndex="1"/>
-    <connection from="Segment2" to="Segment3" fromLane="0" toLane="0" tl="TL2" linkIndex="0"/>
-    <connection from="Segment2" to="Segment3" fromLane="1" toLane="1" tl="TL2" linkIndex="1"/>
+    <connection from="Segment1" to="Segment2" fromLane="0" toLane="0" tl="TL1" linkIndex="0" dir="s" state="O"/>
+    <connection from="Segment1" to="Segment2" fromLane="1" toLane="1" tl="TL1" linkIndex="1" dir="s" state="O"/>
+    <connection from="Segment2" to="Segment3" fromLane="0" toLane="0" tl="TL2" linkIndex="0" dir="s" state="O"/>
+    <connection from="Segment2" to="Segment3" fromLane="1" toLane="1" tl="TL2" linkIndex="1" dir="s" state="O"/>
 </net>
