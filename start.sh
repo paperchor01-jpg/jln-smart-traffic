@@ -1,18 +1,26 @@
 #!/bin/bash
 
-# 1. Turn on the virtual framebuffer monitor
+echo "1. Translating JLN Marg OSM data into SUMO network..."
+# Converts the raw GPS map into a SUMO engineering map, automatically generating junctions and traffic signals
+netconvert --osm-files map.osm -o osm.net.xml \
+  --geometry.remove --roundabouts.guess --ramps.guess \
+  --junctions.join --tls.guess-signals --tls.discard-simple --tls.join
+
+echo "2. Generating high-density random traffic across the real map..."
+# Injects a constant stream of vehicles into the real-world road network lanes
+python $SUMO_HOME/tools/randomTrips.py -n osm.net.xml -r osm.rou.xml -e 3600 -p 1.5
+
+echo "3. Starting virtual display server..."
 export DISPLAY=:99
 Xvfb :99 -screen 0 1280x720x24 &
 sleep 2
 
-# 2. Start the light window manager
 fluxbox &
-
-# 3. Initialize the VNC streaming link
 x11vnc -display :99 -forever -nopw -bg -xkb
 
-# 4. Launch the integrated Python simulation script in the background
+echo "4. Launching Traffic AI engine..."
 python simulation.py &
 
-# 5. Serve the noVNC client to stream the visual display to the web browser
+echo "5. Streaming to web browser via Hugging Face port..."
+# Port changed to 7860 so Hugging Face can display the UI directly in your browser tab
 /opt/novnc/utils/websockify/run --web=/opt/novnc/ 7860 localhost:5900
