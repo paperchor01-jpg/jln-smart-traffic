@@ -15,4 +15,4 @@ x11vnc -display :99 -forever -nopw -bg -xkb
 python simulation.py &
 
 # 5. Serve the noVNC client to stream the visual display to the web browser
-/opt/novnc/utils/websockify/run --web=/opt/novnc/ 8080 localhost:5900
+/opt/novnc/utils/websockify/run --web=/opt/novnc/ 7860 localhost:5900
