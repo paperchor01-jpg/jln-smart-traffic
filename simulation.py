@@ -1,23 +1,20 @@
 import os
 import sys
 import traci
-from ultralytics import YOLO
 
-print("Initializing computer vision model architecture...")
-# Automatically fetches the lightweight nano model for performance in headless clouds
-vision_model = YOLO('yolov8n.pt') 
+# TEMPORARILY DISABLED TO SAVE RAM ON FREE CLOUD TIER
+# from ultralytics import YOLO
+# print("Initializing computer vision model architecture...")
+# vision_model = YOLO('yolov8n.pt') 
 
 print("Locating SUMO configuration files...")
 sumo_binary = "sumo-gui"
-
-# The '--start' command has been removed. SUMO will now wait for your manual start.
 sumo_cmd = [sumo_binary, "-c", "osm.sumocfg"]
 
 try:
     print("Connecting TraCI interface to SUMO core...")
     traci.start(sumo_cmd)
     
-    # Identify the structural traffic light junctions defined in our network map
     traffic_lights = traci.trafficlight.getIDList()
     print(f"Active managed intersections detected: {traffic_lights}")
     
@@ -25,18 +22,15 @@ try:
     while step < 3600:
         traci.simulationStep()
         
-        # Every 10 steps, poll the intersections to optimize green cycles dynamically
+        # Every 10 steps, poll the intersections
         if step % 10 == 0:
             for tl_id in traffic_lights:
-                # Simulate computer vision monitoring by counting active vehicles
-                # In production, feed camera frames directly into 'vision_model'
+                # Basic vehicle counting via TraCI (bypassing heavy computer vision for now)
                 controlled_lanes = traci.trafficlight.getControlledLanes(tl_id)
                 vehicle_count = sum(traci.lane.getLastStepVehicleNumber(lane) for lane in set(controlled_lanes))
                 
-                # Dynamic logic: If a high load is detected, extend green phase runtime
                 if vehicle_count > 5:
                     current_phase = traci.trafficlight.getPhase(tl_id)
-                    # Keep the current phase active slightly longer to clear the load
                     traci.trafficlight.setPhase(tl_id, current_phase)
                     
         step += 1
