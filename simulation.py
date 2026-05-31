@@ -9,7 +9,9 @@ vision_model = YOLO('yolov8n.pt')
 
 print("Locating SUMO configuration files...")
 sumo_binary = "sumo-gui"
-sumo_cmd = [sumo_binary, "-c", "osm.sumocfg", "--start"]
+
+# The '--start' command has been removed. SUMO will now wait for your manual start.
+sumo_cmd = [sumo_binary, "-c", "osm.sumocfg"]
 
 try:
     print("Connecting TraCI interface to SUMO core...")
